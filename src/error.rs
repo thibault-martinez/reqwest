@@ -1,4 +1,4 @@
-#![cfg_attr(target_arch = "wasm32", allow(unused))]
+#![cfg_attr(target_family = "wasm", allow(unused))]
 use std::error::Error as StdError;
 use std::fmt;
 use std::io;
@@ -116,7 +116,7 @@ impl Error {
         matches!(self.inner.kind, Kind::Request)
     }
 
-    #[cfg(not(target_arch = "wasm32"))]
+    #[cfg(not(target_family = "wasm"))]
     /// Returns true if the error is related to connect
     pub fn is_connect(&self) -> bool {
         let mut source = self.source();
@@ -215,14 +215,14 @@ impl StdError for Error {
     }
 }
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(target_family = "wasm")]
 impl From<crate::error::Error> for wasm_bindgen::JsValue {
     fn from(err: Error) -> wasm_bindgen::JsValue {
         js_sys::Error::from(err).into()
     }
 }
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(target_family = "wasm")]
 impl From<crate::error::Error> for js_sys::Error {
     fn from(err: Error) -> js_sys::Error {
         js_sys::Error::new(&format!("{}", err))

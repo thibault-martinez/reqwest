@@ -205,14 +205,14 @@
 
 macro_rules! if_wasm {
     ($($item:item)*) => {$(
-        #[cfg(target_arch = "wasm32")]
+        #[cfg(target_family = "wasm")]
         $item
     )*}
 }
 
 macro_rules! if_hyper {
     ($($item:item)*) => {$(
-        #[cfg(not(target_arch = "wasm32"))]
+        #[cfg(not(target_family = "wasm"))]
         $item
     )*}
 }
@@ -275,7 +275,7 @@ fn _assert_impls() {
     assert_send::<Request>();
     assert_send::<RequestBuilder>();
 
-    #[cfg(not(target_arch = "wasm32"))]
+    #[cfg(not(target_family = "wasm"))]
     {
         assert_send::<Response>();
     }
